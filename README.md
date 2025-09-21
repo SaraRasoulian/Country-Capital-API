@@ -1,5 +1,5 @@
-## Country Capital API
-⚡ This repository is an ASP.NET Core Web API Application that consumes a SOAP API
+## Country Capital API 
+This repository is an ASP.NET Core Web API Application that consumes a SOAP API
 
 
 ## Avaliable endpoints
@@ -24,7 +24,7 @@ Get    http://localhost:5127/api/v1/countries/{isoCode}/capital
 
 
 ### Technical details
-  -	ASP.NET Core Web API -v8  
+  -	ASP.NET Core Web API -v8
   - Resiliency (Retry and Timeout Policy)
   - Logging using Serilog
   - Exception Handling
@@ -33,3 +33,7 @@ Get    http://localhost:5127/api/v1/countries/{isoCode}/capital
   - Clean Code
   - KISS Principle
   - DRY Principle
+  - TDD (Unit Testing)
+
+
+Commits serve as history to see the development of the solution.
