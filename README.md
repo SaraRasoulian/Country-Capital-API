@@ -4,7 +4,9 @@
 
 ## Avaliable endpoints
 
-following endpoint gets `isoCode` as input and returns a JSON object containing the capital city
+Following endpoint gets `isoCode` as input and returns a JSON object containing the capital city
+
+This endpoint calls the public CountryInfo SOAP Service under the hood
 
 ##### Endpoint:
 ```
@@ -18,6 +20,7 @@ Get    http://localhost:5127/api/v1/countries/{isoCode}/capital
   "capital": "Washington"
 }
 ```
+
 
 
 ### Technical details
