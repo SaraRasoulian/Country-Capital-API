@@ -7,5 +7,5 @@ namespace Application.Contract.Countries.SoapResponse;
 public class CapitalEnvelope
 {
     [XmlElement(ElementName = "Body", Namespace = SharedSoapConsts.EnvelopeNamespace)]
-    public CapitalBody? Body { get; set; }
+    public CapitalBody? CapitalBody { get; set; }
 }

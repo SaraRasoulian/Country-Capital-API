@@ -21,7 +21,7 @@ public class CountryApplication(ISoapHelper soapHelper) : ICountryApplication
             envelope = (CapitalEnvelope)serializer.Deserialize(reader);
         }
 
-        var capital = envelope?.Body?.CapitalCityResponse?.CapitalCityResult;
+        var capital = envelope?.CapitalBody?.CapitalCityResponse?.CapitalCityResult;
 
         if (capital is null)
         {
