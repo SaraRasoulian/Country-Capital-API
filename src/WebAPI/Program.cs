@@ -3,20 +3,27 @@ using Application.Contract.Shared;
 using Application.Shared;
 using Polly;
 using Polly.Extensions.Http;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Logging
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 // Dependency Injection
 builder.Services.AddScoped<ICountryApplication, CountryApplication>();
 builder.Services.AddScoped<ISoapHelper, SoapHelper>();
 
-#region Retry and Timeout
-
+// Retry and Timeout
 var soapSettings = builder.Configuration.GetSection("SoapSettings");
 
-// Add HttpClient with Polly policies
 builder.Services.AddHttpClient("SoapClient", client =>
-{    
+{
     client.Timeout = TimeSpan.FromSeconds(int.Parse(soapSettings["TimeoutSeconds"]));
 }).AddPolicyHandler(HttpPolicyExtensions
     .HandleTransientHttpError()
@@ -28,7 +35,6 @@ builder.Services.AddHttpClient("SoapClient", client =>
         {
             Console.WriteLine($"Retry {attempt} after {timespan.TotalSeconds}s due to: {outcome.Exception?.Message ?? outcome.Result?.StatusCode.ToString()}");
         }));
-#endregion
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

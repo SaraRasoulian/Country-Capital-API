@@ -25,10 +25,9 @@ public class CountryApplication(ISoapHelper soapHelper) : ICountryApplication
 
         if (capital is null)
         {
-            throw new Exception("Soap API Failed.");
+            throw new InvalidOperationException(
+                $"SOAP API returned no capital city for country code '{isoCode}'.");
         }
-
-        Console.WriteLine($"{capital} is the capital of {isoCode}");
 
         return new CountryDto
         {

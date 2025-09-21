@@ -1,11 +1,11 @@
 ﻿using Application.Contract.Shared;
+using Microsoft.Extensions.Logging;
 using System.Text;
 
 namespace Application.Shared;
 
-public class SoapHelper(IHttpClientFactory httpClientFactory) : ISoapHelper
+public class SoapHelper(IHttpClientFactory httpClientFactory, ILogger<SoapHelper> logger) : ISoapHelper
 {
-
     public async Task<string> SendRequestAsync(string endpoint, string action, string requestBody)
     {
         try
@@ -23,16 +23,23 @@ public class SoapHelper(IHttpClientFactory httpClientFactory) : ISoapHelper
 
             if (!response.IsSuccessStatusCode)
             {
-                Console.WriteLine("Error: " + response.StatusCode);
-                throw new Exception("Soap API Failed.");
+                logger.LogError("SOAP request to {Endpoint} failed. " +
+                "StatusCode: {StatusCode}", endpoint, response.StatusCode);
+
+                throw new Exception("SOAP request failed.");
             }
+
+            logger.LogInformation("SOAP request to {Endpoint} succeeded", endpoint);
 
             return await response.Content.ReadAsStringAsync();
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error: " + ex.Message);
-            throw new Exception("Soap API Failed. " + ex.Message);
+            logger.LogError(ex, "SOAP request to {Endpoint} failed unexpectedly.", endpoint);
+
+            throw new HttpRequestException(
+                $"SOAP request to {endpoint} failed. See inner exception for details.", ex);
         }
+
     }
 }
