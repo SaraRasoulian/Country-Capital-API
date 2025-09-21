@@ -1,4 +1,5 @@
 ﻿using Application.Contract.Countries;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Shouldly;
 using System.Net.Http.Json;
 
@@ -6,7 +7,7 @@ namespace IntegrationTests.Countries;
 
 public class CountriesControllerTests : BaseControllerTest
 {
-    public CountriesControllerTests(IntegrationTestWebApplicationFactory factory) : base(factory)
+    public CountriesControllerTests(WebApplicationFactory<Program> factory) : base(factory)
     {
     }
 

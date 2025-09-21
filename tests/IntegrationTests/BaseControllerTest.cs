@@ -1,10 +1,12 @@
-﻿namespace IntegrationTests;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 
-public class BaseControllerTest : IClassFixture<IntegrationTestWebApplicationFactory>
+namespace IntegrationTests;
+
+public class BaseControllerTest : IClassFixture<WebApplicationFactory<Program>>
 {
     protected readonly HttpClient _httpClient;
 
-    public BaseControllerTest(IntegrationTestWebApplicationFactory factory)
+    public BaseControllerTest(WebApplicationFactory<Program> factory)
     {
         _httpClient = factory.CreateClient();
     }
