@@ -34,3 +34,6 @@ Get    http://localhost:5127/api/v1/countries/{isoCode}/capital
   - KISS Principle
   - DRY Principle
   - TDD (Unit Testing)
+
+
+Commits serve as history to see the development of the solution.
