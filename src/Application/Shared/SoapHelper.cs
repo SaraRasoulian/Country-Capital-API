@@ -26,7 +26,7 @@ public class SoapHelper(IHttpClientFactory httpClientFactory, ILogger<SoapHelper
                 logger.LogError("SOAP request to {Endpoint} failed. " +
                 "StatusCode: {StatusCode}", endpoint, response.StatusCode);
 
-                throw new Exception("SOAP request failed.");
+                throw new HttpRequestException($"SOAP request to {endpoint} failed.");
             }
 
             logger.LogInformation("SOAP request to {Endpoint} succeeded", endpoint);
