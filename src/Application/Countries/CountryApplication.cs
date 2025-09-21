@@ -10,29 +10,29 @@ public class CountryApplication(ISoapHelper soapHelper) : ICountryApplication
     {
         isoCode = isoCode.Trim().ToUpper();
         var requestBody = CountrySoapConsts.RequestBody.Replace(CountrySoapConsts.Input, isoCode);
-
         var response = await soapHelper.SendRequestAsync(CountrySoapConsts.Endpoint, CountrySoapConsts.Action, requestBody);
 
-        // Deserialize the Response
-        CapitalEnvelope envelope;
-        var serializer = new XmlSerializer(typeof(CapitalEnvelope));
-        using (var reader = new StringReader(response))
+        try
         {
-            envelope = (CapitalEnvelope)serializer.Deserialize(reader);
+            // Deserialize the Response
+            CapitalEnvelope envelope;
+            var serializer = new XmlSerializer(typeof(CapitalEnvelope));
+            using (var reader = new StringReader(response))
+            {
+                envelope = (CapitalEnvelope)serializer.Deserialize(reader);
+            }
+
+            var capital = envelope?.CapitalBody?.CapitalCityResponse?.CapitalCityResult;
+            return new CountryDto
+            {
+                CountryCode = isoCode,
+                Capital = capital.ToString()
+            };
         }
-
-        var capital = envelope?.CapitalBody?.CapitalCityResponse?.CapitalCityResult;
-
-        if (capital is null)
+        catch (Exception ex)
         {
             throw new InvalidOperationException(
-                $"SOAP API returned no capital city for country code '{isoCode}'.");
+                $"Failed to retrieve the capital city for country code '{isoCode}'. The SOAP response was invalid or empty.", ex);
         }
-
-        return new CountryDto
-        {
-            CountryCode = isoCode,
-            Capital = capital.ToString()
-        };
     }
 }
