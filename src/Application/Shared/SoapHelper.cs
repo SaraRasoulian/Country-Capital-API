@@ -3,35 +3,31 @@ using System.Text;
 
 namespace Application.Shared;
 
-public class SoapHelper : ISoapHelper
+public class SoapHelper(IHttpClientFactory httpClientFactory) : ISoapHelper
 {
-    public async Task<String> SendRequestAsync(string endpoint, string action, string requestBody)
+
+    public async Task<string> SendRequestAsync(string endpoint, string action, string requestBody)
     {
         try
         {
-            var content = string.Empty;
+            var client = httpClientFactory.CreateClient("SoapClient");
 
-            using (HttpClient client = new HttpClient())
+            var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
             {
-                var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
-                {
-                    Content = new StringContent(requestBody, Encoding.UTF8, "text/xml")
-                };
+                Content = new StringContent(requestBody, Encoding.UTF8, "text/xml")
+            };
 
-                request.Headers.Add("SOAPAction", action);
+            request.Headers.Add("SOAPAction", action);
 
-                HttpResponseMessage response = await client.SendAsync(request);
+            var response = await client.SendAsync(request);
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine("Error: " + response.StatusCode);
-                    throw new Exception("Soap API Failed.");
-
-                }
-                content = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Error: " + response.StatusCode);
+                throw new Exception("Soap API Failed.");
             }
 
-            return content;
+            return await response.Content.ReadAsStringAsync();
         }
         catch (Exception ex)
         {
