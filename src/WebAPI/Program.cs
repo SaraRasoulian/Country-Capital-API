@@ -42,6 +42,27 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Global exception handler
+app.UseExceptionHandler(appError =>
+{
+    appError.Run(async context =>
+    {
+        context.Response.ContentType = "application/json";
+        var contextFeature = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+        if (contextFeature != null)
+        {
+            logger.Error(contextFeature.Error, "Unhandled exception caught.");
+            context.Response.StatusCode = 400;
+            await context.Response.WriteAsJsonAsync(new
+            {
+                Message = contextFeature.Error.Message,
+                Type = contextFeature.Error.GetType().Name
+            });
+        }
+    });
+});
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
