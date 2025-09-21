@@ -33,7 +33,7 @@ builder.Services.AddHttpClient("SoapClient", client =>
         sleepDurationProvider: attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)), // 2s, 4s, 8s
         onRetry: (outcome, timespan, attempt, context) =>
         {
-            Console.WriteLine($"Retry {attempt} after {timespan.TotalSeconds}s due to: {outcome.Exception?.Message ?? outcome.Result?.StatusCode.ToString()}");
+            logger.Warning($"Retry {attempt} after {timespan.TotalSeconds}s due to: {outcome.Exception?.Message ?? outcome.Result?.StatusCode.ToString()}");
         }));
 
 builder.Services.AddControllers();
