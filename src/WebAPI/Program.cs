@@ -1,9 +1,14 @@
+using Application.Contract.Countries;
+using Application.Contract.Shared;
+using Application.Shared;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Dependency Injection
+builder.Services.AddScoped<ICountryApplication, CountryApplication>();
+builder.Services.AddScoped<ISoapHelper, SoapHelper>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
